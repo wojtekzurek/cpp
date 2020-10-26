@@ -1,0 +1,5 @@
+zad5: zad5.o
+	g++ -o zad5 zad5.o
+
+zad5.o: zad5.cpp
+	g++ -std=c++17 -c -g -Wall -pedantic -Werror -o zad5.o zad5.cpp
