@@ -3,21 +3,13 @@
 #include <iostream>
 
 
-//template <typename T>
-//T add(T a)
-//{
-//    return a;
-//}
-
-auto add()
-{
-    return 0;
-}
-
 template <typename T, typename ... Types>
 auto add(T a, Types ... args)
 {   
-    return a + add(args...);
+    if constexpr(sizeof...(args) <1)
+        return a;
+    else
+        return a + add(args...);
 }
 
 int main()
