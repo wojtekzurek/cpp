@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-
+// PB: Ta wersja nie jest potrzebna
 template <typename T>
 T add1(T const &a, T const &b)
 {

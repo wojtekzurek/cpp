@@ -21,6 +21,7 @@ public:
         V = new std::vector<T>(type);
     }   
 
+    // PB: Brak drugiego operatora indeksowania - do pobierania składowych z niemodyfikowalnych obiektów
     T& operator[](int i)
     {
         return V->operator[](i);

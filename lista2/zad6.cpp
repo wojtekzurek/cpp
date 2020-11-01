@@ -3,6 +3,8 @@
 #include <iostream>
 #include <math.h>
 
+// PB: Ten plik się nie buduje, kompilator zwraca takie błędy:
+//     zad6.cpp:10:47: error: non-type template argument is not a constant expression
 
 template <int a, int N>
 struct volume

@@ -5,11 +5,16 @@
 #include <typeinfo>
 
 //zad4
+
+// PB: Liczenie iloczynu nie modyfikuje argumentów - powinny być przekazywane przez stałe referencje,
+//     ale wtedy nie zadziała ze wzlędu na brak odpowiedniego operatora[] w klasie Wektor
 template <typename T, typename U>
 auto operator*(T &a, U &b)
 {
     if(a.size() != b.size())
     {   
+        // PB: Jeśli nie można policzyć iloczynu to nie znaczy że jest on równy zero.
+        //     Należałoby zgłosić błąd wyjątkiem.
         std::cout << "\n\nERROR: sizes of both vectors aren't the same\n";
         return 0;
     }
@@ -24,7 +29,8 @@ auto operator*(T &a, U &b)
 
     for(int i=0; i<a.size(); i++)
         c += a[i]*b[i];
-    
+
+    // PB: Zawsze zwracany jest int, niezależnie od typu danych w wektorach    
     return c;
 };
 //

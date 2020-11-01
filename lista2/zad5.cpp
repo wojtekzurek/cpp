@@ -19,12 +19,17 @@ auto add1(T const &a, U const &b)
     return a + b;
 }
 
+// PB: Ta wersja ne jest potrzebna
 template <typename T>
 auto add1(T* a, T* b)
 {
     return *a + *b;
 }
 
+// PB: Ta funkcja nie modyfukuje argumentów, więc powinna przyjmować wskaźniki do stałych,
+//     ale po zmianie na:
+//     auto add1(T const *a, U const *b)
+//     nie zadziała. I ten problem trzeba było rozwiązać.
 template <typename T, typename U>
 auto add1(T* a, U* b)
 {

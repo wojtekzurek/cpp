@@ -4,6 +4,7 @@
 #include <string>
 
 
+// PB: Niepotrzebne kopiowanie - argumenty powinny być przekazane przez stałe referencje
 template <typename T, typename U, typename OP>
 auto add2(T arg1, U arg2, OP op)
 {
