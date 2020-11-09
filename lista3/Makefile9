@@ -1,0 +1,5 @@
+zad9: zad9.o
+	g++ -o zad9 zad9.o
+
+zad9.o: zad9.cpp
+	g++ -std=c++17 -c -g -Wall -pedantic -Werror -o zad9.o zad9.cpp
