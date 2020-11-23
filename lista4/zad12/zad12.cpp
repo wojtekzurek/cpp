@@ -8,10 +8,10 @@ int main()
 
     const int N = 1000'000'000;
     int i = 0;
-    float sum = 0;
+    long double sum = 0;
     clock_t t0 = clock();
 
-    #pragma omp parrarel for private(i) reduction(+:sum)
+    #pragma omp parallel for private(i) reduction(+:sum)
     for (i = N-1; i >= 0; --i)
     {
         #pragma omp critical
@@ -20,7 +20,7 @@ int main()
 
     clock_t t1 = clock();
 
-    printf("s = %g\n", sum);
+    printf("s = %Lg\n", sum);
     printf("t = %g\n", ((double)t1 - t0)/CLOCKS_PER_SEC);
 
 }
