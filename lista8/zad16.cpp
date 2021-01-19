@@ -11,6 +11,7 @@
 class ZbiornikPaliwa
 {
     unsigned int fuelCapacity;
+    std::mutex tank_mutex;
 
 public:
     ZbiornikPaliwa(unsigned int iloscDostepnegoPaliwa){
@@ -18,6 +19,8 @@ public:
     }
 
     unsigned int pobierz(unsigned int fuel){
+
+        std::unique_lock<std::mutex> lock2(tank_mutex);
 
         if(fuelCapacity - fuel >= 0){
             fuelCapacity = fuelCapacity - fuel;
@@ -30,7 +33,7 @@ public:
 class Silnik
 {
     std::thread engine_thread;
-    std::vector<std::shared_ptr<ZbiornikPaliwa>> ConnectedTanksList;
+    std::list<std::shared_ptr<ZbiornikPaliwa>> ConnectedTanksList;
     unsigned int engine_interval;
     unsigned int fuel_consumption;
     std::mutex fuel_mutex;
@@ -48,8 +51,9 @@ public:
         engine_thread.join();
     }
 
-    void connect(ZbiornikPaliwa const &tank){
-        ConnectedTanksList.push_back(std::make_shared<ZbiornikPaliwa>(tank));       
+    void connect(std::shared_ptr<ZbiornikPaliwa> &tank){
+        std::unique_lock<std::mutex> lock1(fuel_mutex);
+        ConnectedTanksList.push_back(tank);       
     }
 
 private:
@@ -58,12 +62,11 @@ private:
         std::unique_lock<std::mutex> lock1(fuel_mutex);
         while(!ConnectedTanksList.empty()){
 
-            for(size_t i=0; i<ConnectedTanksList.size(); i++){
-                unsigned int fuel = ConnectedTanksList[i]->pobierz(fuel_consumption);
+            unsigned int fuel = ConnectedTanksList.front()->pobierz(fuel_consumption);
 
-                if(fuel == 0)
-                    ConnectedTanksList.erase(ConnectedTanksList.begin() + i);       
-            }
+            if(fuel == 0)
+                ConnectedTanksList.pop_front();      
+            
             lock1.unlock();
 
             std::this_thread::sleep_for(std::chrono::seconds(engine_interval));
@@ -80,15 +83,15 @@ int main(){
     Silnik engine2(1, 1);
     Silnik engine3(3, 2);
 
-    std::list<ZbiornikPaliwa> Tanks;
+    std::list<std::shared_ptr<ZbiornikPaliwa>> Tanks;
     for(int i=0; i<10; i++){
-        Tanks.push_back(ZbiornikPaliwa(10));
+        Tanks.push_back(std::make_shared<ZbiornikPaliwa>(10));
     }
 
-    for(auto &tank : Tanks){
-        engine1.connect(tank);
-        engine2.connect(tank);
-        engine3.connect(tank);
+    for(auto &ptr : Tanks){
+        engine1.connect(ptr);
+        engine2.connect(ptr);
+        engine3.connect(ptr);
     }
 
     return 0;
